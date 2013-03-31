@@ -1,11 +1,11 @@
 Summary:	Totem Playlist Parser library
 Name:		totem-pl-parser
-Version:	3.4.3
-Release:	1
+Version:	3.4.4
+Release:	3
 License:	LGPL v2+
 Group:		Libraries
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/totem-pl-parser/3.4/%{name}-%{version}.tar.xz
-# Source0-md5:	cebd115e267ef3d377370512122e34c9
+# Source0-md5:	d047ab9a7555e36be36485cfb1b1fe2c
 URL:		http://www.gnome.org/projects/totem/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -16,6 +16,7 @@ BuildRequires:	gobject-introspection-devel
 BuildRequires:	gtk+-devel
 BuildRequires:	gtk-doc
 BuildRequires:	intltool
+BuildRequires:	libarchive >= 3.1.2
 BuildRequires:	libsoup-gnome-devel
 BuildRequires:	libtool
 BuildRequires:	libxml2-devel
@@ -48,14 +49,13 @@ totem-pl-parser library API documentation.
 %setup -q
 
 # kill gnome common deps
-sed -i -e 's/GNOME_COMPILE_WARNINGS.*//g'	\
+%{__sed} -i -e 's/GNOME_COMPILE_WARNINGS.*//g'	\
     -i -e 's/GNOME_MAINTAINER_MODE_DEFINES//g'	\
     -i -e '/GNOME_CODE_COVERAGE/d'		\
     -i -e 's/GNOME_COMMON_INIT//g'		\
     -i -e 's/GNOME_CXX_WARNINGS.*//g'		\
-    -i -e 's/GNOME_DEBUG_CHECK//g' configure.in
-
-sed -i -e '/@GNOME_CODE_COVERAGE_RULES@/d' plparse/Makefile.am
+    -i -e 's/GNOME_DEBUG_CHECK//g' configure.ac
+%{__sed} -i -e '/@GNOME_CODE_COVERAGE_RULES@/d' plparse/Makefile.am
 
 %build
 %{__gtkdocize}
@@ -99,7 +99,6 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libtotem-*.so
-%{_libdir}/libtotem*.la
 %{_includedir}/totem-pl-parser
 %{_pkgconfigdir}/totem*.pc
 %{_datadir}/gir-1.0/TotemPlParser-1.0.gir
