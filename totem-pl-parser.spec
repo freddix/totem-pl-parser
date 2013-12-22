@@ -1,11 +1,12 @@
 Summary:	Totem Playlist Parser library
 Name:		totem-pl-parser
 Version:	3.10.0
-Release:	1
+Release:	2
 License:	LGPL v2+
 Group:		Libraries
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/totem-pl-parser/3.10/%{name}-%{version}.tar.xz
 # Source0-md5:	e87264edb3d6437c119c511a2e547bb5
+Patch0:		%{name}-configure.patch
 URL:		http://www.gnome.org/projects/totem/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -47,6 +48,7 @@ totem-pl-parser library API documentation.
 
 %prep
 %setup -q
+%patch0 -p1
 
 # kill gnome common deps
 %{__sed} -i -e 's/GNOME_COMPILE_WARNINGS.*//g'	\
@@ -68,7 +70,6 @@ totem-pl-parser library API documentation.
 %configure \
 	--disable-silent-rules	\
 	--disable-static	\
-	--enable-gtk-doc	\
 	--enable-introspection	\
 	--with-html-dir=%{_gtkdocdir}
 %{__make}
@@ -76,7 +77,7 @@ totem-pl-parser library API documentation.
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__make} install \
+%{__make} -j1 install \
 	DESTDIR=$RPM_BUILD_ROOT
 
 rm -rf $RPM_BUILD_ROOT%{_datadir}/locale/{ca@valencia,en@shaw}
